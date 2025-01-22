@@ -12,6 +12,7 @@ To get started with Metatool App, the eastiest way is to clone the repository an
 ```bash
 git clone https://github.com/metatool-ai/metatool-app.git
 cd metatool-app
+cp example.env .env
 docker compose up --build -d
 ```
 
