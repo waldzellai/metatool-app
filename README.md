@@ -23,7 +23,23 @@ You also need a MCP Client to connect to `mcp-server-metatool`. For example if y
       "command": "mcp-server-metatool",
       "args": [],
       "env": {
-        "METATOOL_API_KEY": "<your api key>"
+        "METATOOL_API_KEY": "<your api key>",
+      }
+    }
+  }
+}
+```
+
+Optionally you can also set the url to Metatool App server:
+```json
+{
+  "mcpServers": {
+    "metatool": {
+      "command": "mcp-server-metatool",
+      "args": [],
+      "env": {
+        "METATOOL_API_KEY": "<your api key>",
+        "METATOOL_API_BASE_URL": "http://localhost:12005", // optional, default to this
       }
     }
   }
