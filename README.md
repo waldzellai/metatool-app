@@ -4,6 +4,8 @@ Metatool App is a GUI app to manage MCP tools using MCP. It has to be used with 
 
 The app is prioritized to be self hostable at first, and it is completely free and open source.
 
+[Screenshot](https://raw.githubusercontent.com/metatool-ai/metatool-app/main/screenshot.png)
+
 ## Installation
 To get started with Metatool App, the eastiest way is to clone the repository and use Docker Compose to run it.
 
