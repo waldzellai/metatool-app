@@ -39,7 +39,7 @@ Optionally you can also set the url to Metatool App server:
       "args": [],
       "env": {
         "METATOOL_API_KEY": "<your api key>",
-        "METATOOL_API_BASE_URL": "http://localhost:12005", // optional, default to this
+        "METATOOL_API_BASE_URL": "http://localhost:12005",
       }
     }
   }
