@@ -26,8 +26,9 @@ You also need a MCP Client to connect to `mcp-server-metatool`. For example if y
     }
   }
 }
-You can get the API key from the Metatool App's API Keys page.
 ```
+
+You can get the API key from the Metatool App's API Keys page.
 
 ## Demo video TBA
 
