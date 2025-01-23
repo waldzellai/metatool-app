@@ -16,6 +16,9 @@ cp example.env .env
 docker compose up --build -d
 ```
 
+It is recommended to have npx (node.js based mcp) and uvx (python based mcp) installed globally.
+To install uv check: https://docs.astral.sh/uv/getting-started/installation/
+
 You also need a MCP Client to connect to `mcp-server-metatool`. For example if you are using Claude Desktop, the config json may look like this:
 ```json
 {
