@@ -16,6 +16,8 @@ cp example.env .env
 docker compose up --build -d
 ```
 
+Then open http://localhost:12005 in your browser to open Metatool App.
+
 It is recommended to have npx (node.js based mcp) and uvx (python based mcp) installed globally.
 To install uv check: https://docs.astral.sh/uv/getting-started/installation/
 
