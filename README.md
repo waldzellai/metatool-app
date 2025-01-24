@@ -4,7 +4,15 @@ Metatool App is a GUI app to manage MCP tools using [MCP (Model Context Protocol
 
 The app is prioritized to be self hostable at first, and it is completely free and open source.
 
-![Screenshot](https://raw.githubusercontent.com/metatool-ai/metatool-app/main/screenshot.png)
+![Metatool App Demo Video](metatool.mp4)
+
+## Highlights
+
+- You only need to install one mcp-server-metatool MCP server and metatool will handle the rest for you.
+- GUI Metatool App, easy to use, add/remove/toggle on-offs mcp servers easily.
+- Free, open source, self hostable.
+- Project allows you to use Metatool in multiple MCP clients.
+- Profile allows you to switch tool combinations on a single MCP client without pain.
 
 ## Installation
 To get started with Metatool App, the eastiest way is to clone the repository and use Docker Compose to run it.
@@ -54,8 +62,6 @@ Optionally you can also set the url to Metatool App server:
 
 You can get the API key from the Metatool App's API Keys page.
 
-## Demo video TBA
-
 ## Concepts
 
 - MCP Server Metatool: you only need to configure once to connect to mcp-server-metatool, then you can manage tools in Metatool App forever. `mcp-server-metatool` is a proxy MCP server that itself is a MCP Client that connects to and joins MCP servers tools configured in this Metatool App GUI. For details check out [mcp-server-metatool](https://github.com/metatool-ai/mcp-server-metatool) repo.
@@ -67,3 +73,7 @@ You can get the API key from the Metatool App's API Keys page.
 
 ## License
 Elastic License 2.0 (ELv2)
+
+## Credits
+
+- Demo video uses MCP Client [5ire](https://5ire.app/)
