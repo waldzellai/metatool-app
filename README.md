@@ -4,7 +4,7 @@ Metatool App is a GUI app to manage MCP tools using [MCP (Model Context Protocol
 
 The app is prioritized to be self hostable at first, and it is completely free and open source.
 
-![Metatool App Demo Video](metatool.mp4)
+![Metatool App Demo Video](https://github.com/metatool-ai/metatool-app/blob/main/metatool.mp4)
 
 ## Highlights
 
