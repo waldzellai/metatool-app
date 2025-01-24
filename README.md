@@ -1,6 +1,6 @@
 # Metatool App
 
-Metatool App is a GUI app to manage MCP tools using MCP. It has to be used with [mcp-server-metatool](https://github.com/metatool-ai/mcp-server-metatool) together. `mcp-server-metatool` is a proxy MCP server that joins MCP servers configured in this Metatool App GUI. It supports routing `list_tools` and `call_tool` in MCP.
+Metatool App is a GUI app to manage MCP tools using [MCP (Model Context Protocol)](https://modelcontextprotocol.io/). It has to be used with [mcp-server-metatool](https://github.com/metatool-ai/mcp-server-metatool) together. `mcp-server-metatool` is a proxy MCP server that joins MCP servers configured in this Metatool App GUI. It supports routing `list_tools` and `call_tool` in MCP.
 
 The app is prioritized to be self hostable at first, and it is completely free and open source.
 
