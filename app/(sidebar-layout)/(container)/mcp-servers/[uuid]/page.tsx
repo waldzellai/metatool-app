@@ -19,7 +19,7 @@ import {
   toggleMcpServerStatus,
   updateMcpServer,
 } from '@/app/actions/mcp-servers';
-import { getToolsByMcpServerUuid } from '@/app/actions/tools';
+import { getToolsByMcpServerUuid, toggleToolStatus } from '@/app/actions/tools';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -45,7 +45,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
-import { McpServerStatus, McpServerType } from '@/db/schema';
+import { McpServerStatus, McpServerType, ToggleStatus } from '@/db/schema';
 import { useProfiles } from '@/hooks/use-profiles';
 import { McpServer } from '@/types/mcp-server';
 
@@ -434,7 +434,7 @@ export default function McpServerDetailPage({
 }
 
 function ToolsList({ mcpServerUuid }: { mcpServerUuid: string }) {
-  const { data: tools, error } = useSWR(
+  const { data: tools, error, mutate } = useSWR(
     mcpServerUuid ? ['getToolsByMcpServerUuid', mcpServerUuid] : null,
     () => getToolsByMcpServerUuid(mcpServerUuid)
   );
@@ -449,6 +449,21 @@ function ToolsList({ mcpServerUuid }: { mcpServerUuid: string }) {
     columnHelper.accessor('description', {
       cell: (info) => info.getValue() || '-',
       header: 'Description',
+    }),
+    columnHelper.accessor('status', {
+      cell: (info) => (
+        <Switch
+          checked={info.getValue() === ToggleStatus.ACTIVE}
+          onCheckedChange={async (checked) => {
+            await toggleToolStatus(
+              info.row.original.uuid,
+              checked ? ToggleStatus.ACTIVE : ToggleStatus.INACTIVE
+            );
+            mutate();
+          }}
+        />
+      ),
+      header: 'Status',
     }),
     columnHelper.accessor('created_at', {
       cell: (info) => new Date(info.getValue()).toLocaleString(),

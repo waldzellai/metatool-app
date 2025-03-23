@@ -3,7 +3,7 @@
 import { eq } from 'drizzle-orm';
 
 import { db } from '@/db';
-import { toolsTable } from '@/db/schema';
+import { ToggleStatus, toolsTable } from '@/db/schema';
 import { Tool } from '@/types/tool';
 
 export async function getToolsByMcpServerUuid(
@@ -16,4 +16,14 @@ export async function getToolsByMcpServerUuid(
     .orderBy(toolsTable.name);
 
   return tools as Tool[];
+}
+
+export async function toggleToolStatus(
+  toolUuid: string,
+  status: ToggleStatus
+): Promise<void> {
+  await db
+    .update(toolsTable)
+    .set({ status: status })
+    .where(eq(toolsTable.uuid, toolUuid));
 }

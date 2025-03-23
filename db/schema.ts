@@ -20,6 +20,11 @@ export enum McpServerStatus {
   DECLINED = 'DECLINED',
 }
 
+export enum ToggleStatus {
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
+}
+
 export enum McpServerType {
   STDIO = 'STDIO',
   SSE = 'SSE',
@@ -28,6 +33,11 @@ export enum McpServerType {
 export const mcpServerStatusEnum = pgEnum(
   'mcp_server_status',
   enumToPgEnum(McpServerStatus)
+);
+
+export const toggleStatusEnum = pgEnum(
+  'toggle_status',
+  enumToPgEnum(ToggleStatus)
 );
 
 export const mcpServerTypeEnum = pgEnum(
@@ -180,6 +190,7 @@ export const toolsTable = pgTable(
     mcp_server_uuid: uuid('mcp_server_uuid')
       .notNull()
       .references(() => mcpServersTable.uuid),
+    status: toggleStatusEnum('status').notNull().default(ToggleStatus.ACTIVE),
   },
   (table) => [
     index('tools_mcp_server_uuid_idx').on(table.mcp_server_uuid),

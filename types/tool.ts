@@ -1,3 +1,5 @@
+import { ToggleStatus } from '@/db/schema';
+
 export interface Tool {
   uuid: string;
   name: string;
@@ -11,4 +13,5 @@ export interface Tool {
   };
   created_at: Date;
   mcp_server_uuid: string;
+  status: ToggleStatus;
 }
