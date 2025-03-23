@@ -346,7 +346,7 @@ export default function McpServerDetailPage({
 
       <div className='grid grid-cols-1 md:grid-cols-2 gap-8 mb-12'>
         <Card>
-          <CardHeader className="pb-2">
+          <CardHeader className="pb-6">
             <CardTitle className="text-2xl font-bold">Server Details</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -382,7 +382,7 @@ export default function McpServerDetailPage({
         </Card>
 
         <Card>
-          <CardHeader className="pb-2">
+          <CardHeader className="pb-6">
             <CardTitle className="text-2xl font-bold">Configuration</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
