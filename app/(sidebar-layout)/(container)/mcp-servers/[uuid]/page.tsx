@@ -390,21 +390,21 @@ export default function McpServerDetailPage({
               <>
                 <div className='mb-3'>
                   <strong>Command:</strong>
-                  <pre className='mt-2 p-2 bg-secondary rounded-md'>
+                  <pre className='mt-2 p-2 bg-secondary rounded-md whitespace-pre-wrap break-words'>
                     {mcpServer.command}
                   </pre>
                 </div>
 
                 <div className='mb-3'>
                   <strong>Arguments:</strong>
-                  <pre className='mt-2 p-2 bg-secondary rounded-md'>
+                  <pre className='mt-2 p-2 bg-secondary rounded-md whitespace-pre-wrap break-words'>
                     {mcpServer.args.join(' ')}
                   </pre>
                 </div>
 
                 <div className='mb-3'>
                   <strong>Environment Variables:</strong>
-                  <pre className='mt-2 p-2 bg-secondary rounded-md'>
+                  <pre className='mt-2 p-2 bg-secondary rounded-md whitespace-pre-wrap break-words'>
                     {Object.entries(mcpServer.env).length > 0
                       ? Object.entries(mcpServer.env).map(
                         ([key, value]) => `${key}=${value}\n`
@@ -416,7 +416,7 @@ export default function McpServerDetailPage({
             ) : (
               <div className='mb-3'>
                 <strong>Server URL:</strong>
-                <pre className='mt-2 p-2 bg-secondary rounded-md'>
+                <pre className='mt-2 p-2 bg-secondary rounded-md whitespace-pre-wrap break-words'>
                   {mcpServer.url}
                 </pre>
               </div>
