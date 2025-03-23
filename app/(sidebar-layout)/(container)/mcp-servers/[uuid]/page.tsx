@@ -1,5 +1,11 @@
 'use client';
 
+import {
+  createColumnHelper,
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+} from '@tanstack/react-table';
 import { ArrowLeft, Pencil, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { use } from 'react';
@@ -15,6 +21,13 @@ import {
 } from '@/app/actions/mcp-servers';
 import { getToolsByMcpServerUuid } from '@/app/actions/tools';
 import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import {
   Dialog,
   DialogContent,
@@ -137,8 +150,8 @@ export default function McpServerDetailPage({
   if (!mcpServer) return <div>Loading...</div>;
 
   return (
-    <div>
-      <div className='flex justify-between items-center mb-8'>
+    <div className="container mx-auto px-4 max-w-4xl">
+      <div className='flex justify-between items-center mb-8 pt-6'>
         <Button
           variant='outline'
           onClick={() => {
@@ -322,84 +335,98 @@ export default function McpServerDetailPage({
         </div>
       </div>
 
-      <h1 className='text-3xl font-bold mb-8'>{mcpServer.name}</h1>
-
-      <div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
-        <div className='space-y-4'>
-          <p className='mb-3'>
-            <strong>UUID:</strong> {mcpServer.uuid}
-          </p>
-
-          <p className='mb-3 flex items-center gap-2'>
-            <strong>Status:</strong>{' '}
-            <Switch
-              checked={mcpServer.status === McpServerStatus.ACTIVE}
-              onCheckedChange={async (checked) => {
-                if (!currentProfile?.uuid || !mcpServer.uuid) return;
-                await toggleMcpServerStatus(
-                  currentProfile.uuid,
-                  mcpServer.uuid,
-                  checked ? McpServerStatus.ACTIVE : McpServerStatus.INACTIVE
-                );
-                mutate();
-              }}
-            />
-          </p>
-
-          <p className='mb-3'>
-            <strong>Created At:</strong>{' '}
-            {new Date(mcpServer.created_at).toLocaleString()}
-          </p>
-
-          <p className='mb-3'>
-            <strong>Description:</strong>{' '}
-            <span className='whitespace-pre-wrap'>{mcpServer.description}</span>
-          </p>
-
-          <p className='mb-3'>
-            <strong>Type:</strong> {mcpServer.type}
-          </p>
-
-          {mcpServer.type === McpServerType.STDIO ? (
-            <>
-              <div className='mb-3'>
-                <strong>Command:</strong>
-                <pre className='mt-2 p-2 bg-secondary rounded-md'>
-                  {mcpServer.command}
-                </pre>
-              </div>
-
-              <div className='mb-3'>
-                <strong>Arguments:</strong>
-                <pre className='mt-2 p-2 bg-secondary rounded-md'>
-                  {mcpServer.args.join(' ')}
-                </pre>
-              </div>
-
-              <div className='mb-3'>
-                <strong>Environment Variables:</strong>
-                <pre className='mt-2 p-2 bg-secondary rounded-md'>
-                  {Object.entries(mcpServer.env).length > 0
-                    ? Object.entries(mcpServer.env).map(
-                      ([key, value]) => `${key}=${value}\n`
-                    )
-                    : 'No environment variables set'}
-                </pre>
-              </div>
-            </>
-          ) : (
-            <div className='mb-3'>
-              <strong>Server URL:</strong>
-              <pre className='mt-2 p-2 bg-secondary rounded-md'>
-                {mcpServer.url}
-              </pre>
-            </div>
+      <Card className="mb-12 border-none shadow-none">
+        <CardHeader className="text-center pb-0">
+          <CardTitle className="text-4xl font-bold">{mcpServer.name}</CardTitle>
+          {mcpServer.description && (
+            <CardDescription className="max-w-2xl mx-auto text-lg">{mcpServer.description}</CardDescription>
           )}
-        </div>
+        </CardHeader>
+      </Card>
+
+      <div className='grid grid-cols-1 md:grid-cols-2 gap-8 mb-12'>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-2xl font-bold">Server Details</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className='mb-3'>
+              <strong>UUID:</strong> {mcpServer.uuid}
+            </p>
+
+            <p className='mb-3 flex items-center gap-2'>
+              <strong>Status:</strong>{' '}
+              <Switch
+                checked={mcpServer.status === McpServerStatus.ACTIVE}
+                onCheckedChange={async (checked) => {
+                  if (!currentProfile?.uuid || !mcpServer.uuid) return;
+                  await toggleMcpServerStatus(
+                    currentProfile.uuid,
+                    mcpServer.uuid,
+                    checked ? McpServerStatus.ACTIVE : McpServerStatus.INACTIVE
+                  );
+                  mutate();
+                }}
+              />
+            </p>
+
+            <p className='mb-3'>
+              <strong>Created At:</strong>{' '}
+              {new Date(mcpServer.created_at).toLocaleString()}
+            </p>
+
+            <p className='mb-3'>
+              <strong>Type:</strong> {mcpServer.type}
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-2xl font-bold">Configuration</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {mcpServer.type === McpServerType.STDIO ? (
+              <>
+                <div className='mb-3'>
+                  <strong>Command:</strong>
+                  <pre className='mt-2 p-2 bg-secondary rounded-md'>
+                    {mcpServer.command}
+                  </pre>
+                </div>
+
+                <div className='mb-3'>
+                  <strong>Arguments:</strong>
+                  <pre className='mt-2 p-2 bg-secondary rounded-md'>
+                    {mcpServer.args.join(' ')}
+                  </pre>
+                </div>
+
+                <div className='mb-3'>
+                  <strong>Environment Variables:</strong>
+                  <pre className='mt-2 p-2 bg-secondary rounded-md'>
+                    {Object.entries(mcpServer.env).length > 0
+                      ? Object.entries(mcpServer.env).map(
+                        ([key, value]) => `${key}=${value}\n`
+                      )
+                      : 'No environment variables set'}
+                  </pre>
+                </div>
+              </>
+            ) : (
+              <div className='mb-3'>
+                <strong>Server URL:</strong>
+                <pre className='mt-2 p-2 bg-secondary rounded-md'>
+                  {mcpServer.url}
+                </pre>
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
 
       <div className="mt-8">
-        <h2 className="text-xl font-semibold mb-4">Associated Tools</h2>
+        <h2 className="text-2xl font-bold mb-4">Tools</h2>
         <ToolsList mcpServerUuid={mcpServer.uuid} />
       </div>
     </div>
@@ -412,32 +439,65 @@ function ToolsList({ mcpServerUuid }: { mcpServerUuid: string }) {
     () => getToolsByMcpServerUuid(mcpServerUuid)
   );
 
+  const columnHelper = createColumnHelper<any>();
+
+  const columns = [
+    columnHelper.accessor('name', {
+      cell: (info) => info.getValue(),
+      header: 'Name',
+    }),
+    columnHelper.accessor('description', {
+      cell: (info) => info.getValue() || '-',
+      header: 'Description',
+    }),
+    columnHelper.accessor('created_at', {
+      cell: (info) => new Date(info.getValue()).toLocaleString(),
+      header: 'Reported At',
+    }),
+  ];
+
+  const table = useReactTable({
+    data: tools || [],
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+  });
+
   if (error) return <div>Failed to load tools</div>;
   if (!tools) return <div>Loading tools...</div>;
   if (tools.length === 0) return <div>No tools found for this MCP server</div>;
 
   return (
-    <div className="space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {tools.map((tool) => (
-          <div
-            key={tool.uuid}
-            className="p-4 border rounded-md bg-card shadow-sm hover:shadow-md transition-shadow"
-          >
-            <h3 className="font-medium text-lg">{tool.name}</h3>
-            {tool.description && (
-              <p className="text-sm text-muted-foreground mt-1">
-                {tool.description}
-              </p>
-            )}
-            <div className="mt-2">
-              <p className="text-xs text-muted-foreground">
-                Reported At: {new Date(tool.created_at).toLocaleString()}
-              </p>
-            </div>
-          </div>
-        ))}
-      </div>
+    <div className="overflow-x-auto">
+      <table className="min-w-full bg-white border border-gray-300">
+        <thead>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <tr key={headerGroup.id}>
+              {headerGroup.headers.map((header) => (
+                <th
+                  key={header.id}
+                  className="py-2 px-4 border-b text-left font-semibold bg-gray-100"
+                >
+                  {flexRender(
+                    header.column.columnDef.header,
+                    header.getContext()
+                  )}
+                </th>
+              ))}
+            </tr>
+          ))}
+        </thead>
+        <tbody>
+          {table.getRowModel().rows.map((row) => (
+            <tr key={row.id} className="hover:bg-gray-50">
+              {row.getVisibleCells().map((cell) => (
+                <td key={cell.id} className="py-2 px-4 border-b">
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
