@@ -13,6 +13,7 @@ import {
   toggleMcpServerStatus,
   updateMcpServer,
 } from '@/app/actions/mcp-servers';
+import { getToolsByMcpServerUuid } from '@/app/actions/tools';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -395,6 +396,47 @@ export default function McpServerDetailPage({
             </div>
           )}
         </div>
+      </div>
+
+      <div className="mt-8">
+        <h2 className="text-xl font-semibold mb-4">Associated Tools</h2>
+        <ToolsList mcpServerUuid={mcpServer.uuid} />
+      </div>
+    </div>
+  );
+}
+
+function ToolsList({ mcpServerUuid }: { mcpServerUuid: string }) {
+  const { data: tools, error } = useSWR(
+    mcpServerUuid ? ['getToolsByMcpServerUuid', mcpServerUuid] : null,
+    () => getToolsByMcpServerUuid(mcpServerUuid)
+  );
+
+  if (error) return <div>Failed to load tools</div>;
+  if (!tools) return <div>Loading tools...</div>;
+  if (tools.length === 0) return <div>No tools found for this MCP server</div>;
+
+  return (
+    <div className="space-y-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {tools.map((tool) => (
+          <div
+            key={tool.uuid}
+            className="p-4 border rounded-md bg-card shadow-sm hover:shadow-md transition-shadow"
+          >
+            <h3 className="font-medium text-lg">{tool.name}</h3>
+            {tool.description && (
+              <p className="text-sm text-muted-foreground mt-1">
+                {tool.description}
+              </p>
+            )}
+            <div className="mt-2">
+              <p className="text-xs text-muted-foreground">
+                Reported At: {new Date(tool.created_at).toLocaleString()}
+              </p>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
