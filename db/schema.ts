@@ -7,6 +7,7 @@ import {
   pgTable,
   text,
   timestamp,
+  unique,
   uuid,
 } from 'drizzle-orm/pg-core';
 
@@ -155,5 +156,36 @@ export const customMcpServersTable = pgTable(
   (table) => [
     index('custom_mcp_servers_status_idx').on(table.status),
     index('custom_mcp_servers_profile_uuid_idx').on(table.profile_uuid),
+  ]
+);
+
+export const toolsTable = pgTable(
+  'tools',
+  {
+    uuid: uuid('uuid').primaryKey().defaultRandom(),
+    name: text('name').notNull(),
+    description: text('description'),
+    toolSchema: jsonb('tool_schema')
+      .$type<{
+        inputSchema: {
+          type: 'object';
+          properties?: Record<string, any>;
+        };
+        [key: string]: any;
+      }>()
+      .notNull(),
+    created_at: timestamp('created_at', { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    mcp_server_uuid: uuid('mcp_server_uuid')
+      .notNull()
+      .references(() => mcpServersTable.uuid),
+  },
+  (table) => [
+    index('tools_mcp_server_uuid_idx').on(table.mcp_server_uuid),
+    unique('tools_unique_tool_name_per_server_idx').on(
+      table.mcp_server_uuid,
+      table.name
+    ),
   ]
 );
