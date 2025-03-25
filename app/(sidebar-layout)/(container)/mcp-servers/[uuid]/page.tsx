@@ -20,6 +20,7 @@ import {
   toggleMcpServerStatus,
   updateMcpServer,
 } from '@/app/actions/mcp-servers';
+import { refreshSseTools } from '@/app/actions/refresh-sse-tools';
 import { getToolsByMcpServerUuid, toggleToolStatus } from '@/app/actions/tools';
 import { Button } from '@/components/ui/button';
 import {
@@ -51,6 +52,7 @@ import { useProfiles } from '@/hooks/use-profiles';
 import { useProjects } from '@/hooks/use-projects';
 import { useToast } from '@/hooks/use-toast';
 import { McpServer } from '@/types/mcp-server';
+
 
 export default function McpServerDetailPage({
   params,
@@ -438,28 +440,22 @@ export default function McpServerDetailPage({
       <div className="mt-8">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-bold">Tools</h2>
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button size="sm" onClick={() => {
-                // Refresh the tools list
-                const toolsMutate = document.getElementById('tools-list-mutate');
-                if (toolsMutate) {
-                  toolsMutate.click();
-                }
-              }}>
-                <RefreshCw className="mr-2 h-4 w-4" />
-                Refresh
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="w-full max-w-4xl">
-              <DialogHeader>
-                <DialogTitle>Refresh Tools</DialogTitle>
-              </DialogHeader>
-              <div className="py-4">
-                <p className="mb-4">
-                  Command-based MCP servers need to run locally. On next time you run MetaMCP MCP server, it will automatically refresh tools. To refresh tools manually for all installed MCP servers, run the following command:
-                </p>
-                {mcpServer.type === McpServerType.STDIO ? (
+          {mcpServer.type === McpServerType.STDIO ? (
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button size="sm">
+                  <RefreshCw className="mr-2 h-4 w-4" />
+                  Refresh
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="w-full max-w-4xl">
+                <DialogHeader>
+                  <DialogTitle>Refresh Tools</DialogTitle>
+                </DialogHeader>
+                <div className="py-4">
+                  <p className="mb-4">
+                    Command-based MCP servers need to run locally. On next time you run MetaMCP MCP server, it will automatically refresh tools. To refresh tools manually for all installed MCP servers, run the following command:
+                  </p>
                   <div className="relative">
                     <Button
                       size="sm"
@@ -481,34 +477,33 @@ export default function McpServerDetailPage({
                       </pre>
                     </div>
                   </div>
-                ) : (
-                  <div className="relative">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="absolute top-2 right-2 z-10"
-                      onClick={() => {
-                        navigator.clipboard.writeText(mcpServer.url || '');
-                        toast({
-                          description: "URL copied to clipboard"
-                        });
-                      }}
-                    >
-                      <Copy className="h-4 w-4" />
-                    </Button>
-                    <div className="overflow-x-auto max-w-full">
-                      <pre className="bg-[#f6f8fa] text-[#24292f] p-4 rounded-md whitespace-pre-wrap break-words">
-                        {mcpServer.url || ''}
-                      </pre>
-                    </div>
-                  </div>
-                )}
-                <p className="mt-4 text-sm text-muted-foreground">
-                  After running the command, your tools will be refreshed.
-                </p>
-              </div>
-            </DialogContent>
-          </Dialog>
+                  <p className="mt-4 text-sm text-muted-foreground">
+                    After running the command, your tools will be refreshed.
+                  </p>
+                </div>
+              </DialogContent>
+            </Dialog>
+          ) : (
+            <Button size="sm" onClick={async () => {
+              try {
+                await refreshSseTools(mcpServer.uuid);
+                await mutate();
+                toast({
+                  description: "SSE tools refreshed successfully"
+                });
+              } catch (error) {
+                console.error("Error refreshing SSE tools:", error);
+                toast({
+                  variant: "destructive",
+                  title: "Error refreshing tools",
+                  description: error instanceof Error ? error.message : "An unknown error occurred"
+                });
+              }
+            }}>
+              <RefreshCw className="mr-2 h-4 w-4" />
+              Refresh
+            </Button>
+          )}
         </div>
         <ToolsList mcpServerUuid={mcpServer.uuid} />
       </div>

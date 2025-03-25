@@ -177,11 +177,8 @@ export const toolsTable = pgTable(
     description: text('description'),
     toolSchema: jsonb('tool_schema')
       .$type<{
-        inputSchema: {
-          type: 'object';
-          properties?: Record<string, any>;
-        };
-        [key: string]: any;
+        type: 'object';
+        properties?: Record<string, any>;
       }>()
       .notNull(),
     created_at: timestamp('created_at', { withTimezone: true })
