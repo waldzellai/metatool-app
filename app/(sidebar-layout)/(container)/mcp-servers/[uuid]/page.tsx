@@ -457,7 +457,7 @@ export default function McpServerDetailPage({
               </DialogHeader>
               <div className="py-4">
                 <p className="mb-4">
-                  Command-based MCP servers need to run locally. On next time you run MetaMCP MCP server, it will automatically refresh tools. To refresh tools manually for this MCP server, run the following command:
+                  Command-based MCP servers need to run locally. On next time you run MetaMCP MCP server, it will automatically refresh tools. To refresh tools manually for all installed MCP servers, run the following command:
                 </p>
                 {mcpServer.type === McpServerType.STDIO ? (
                   <div className="relative">
