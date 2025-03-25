@@ -69,7 +69,7 @@ export default function McpServerDetailPage({
   const {
     data: mcpServer,
     error,
-    mutate,
+    mutate: mutateMcpServer,
   } = useSWR<McpServer | undefined>(
     uuid && currentProfile?.uuid
       ? ['getMcpServerByUuid', uuid, currentProfile?.uuid]
@@ -151,7 +151,7 @@ export default function McpServerDetailPage({
     };
 
     await updateMcpServer(currentProfile.uuid, mcpServer.uuid, processedData);
-    await mutate();
+    await mutateMcpServer();
     setIsEditing(false);
   };
 
@@ -382,7 +382,7 @@ export default function McpServerDetailPage({
                     mcpServer.uuid,
                     checked ? McpServerStatus.ACTIVE : McpServerStatus.INACTIVE
                   );
-                  mutate();
+                  mutateMcpServer();
                 }}
               />
             </p>
