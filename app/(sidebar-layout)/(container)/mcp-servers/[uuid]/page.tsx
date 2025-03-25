@@ -451,13 +451,13 @@ export default function McpServerDetailPage({
                 Refresh
               </Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="w-full max-w-4xl">
               <DialogHeader>
                 <DialogTitle>Refresh Tools</DialogTitle>
               </DialogHeader>
               <div className="py-4">
                 <p className="mb-4">
-                  To refresh tools for this MCP server, run the following command:
+                  Command-based MCP servers need to run locally. On next time you run MetaMCP MCP server, it will automatically refresh tools. To refresh tools manually for this MCP server, run the following command:
                 </p>
                 {mcpServer.type === McpServerType.STDIO ? (
                   <div className="relative">
