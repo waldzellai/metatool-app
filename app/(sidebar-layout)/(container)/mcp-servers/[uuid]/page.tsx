@@ -440,7 +440,7 @@ export default function McpServerDetailPage({
           <h2 className="text-2xl font-bold">Tools</h2>
           <Dialog>
             <DialogTrigger asChild>
-              <Button variant="outline" size="sm" onClick={() => {
+              <Button size="sm" onClick={() => {
                 // Refresh the tools list
                 const toolsMutate = document.getElementById('tools-list-mutate');
                 if (toolsMutate) {
