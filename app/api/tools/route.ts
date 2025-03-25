@@ -2,7 +2,7 @@ import { sql } from 'drizzle-orm';
 import { NextResponse } from 'next/server';
 
 import { db } from '@/db';
-import { toolsTable } from '@/db/schema';
+import { mcpServersTable, toolsTable } from '@/db/schema';
 
 import { authenticateApiKey } from '../auth';
 
@@ -89,6 +89,44 @@ export async function POST(request: Request) {
     console.error(error);
     return NextResponse.json(
       { error: 'Failed to process tools request' },
+      { status: 500 }
+    );
+  }
+}
+
+export async function GET(request: Request) {
+  try {
+    const auth = await authenticateApiKey(request);
+    if (auth.error) return auth.error;
+
+    const { searchParams } = new URL(request.url);
+    const status = searchParams.get('status');
+
+    // Join with mcp_servers table to filter by profile_uuid
+    const query = db
+      .select({
+        mcp_server_uuid: toolsTable.mcp_server_uuid,
+        name: toolsTable.name,
+        status: toolsTable.status,
+      })
+      .from(toolsTable)
+      .innerJoin(
+        mcpServersTable,
+        sql`${toolsTable.mcp_server_uuid} = ${mcpServersTable.uuid}`
+      )
+      .where(
+        sql`${mcpServersTable.profile_uuid} = ${auth.activeProfile.uuid}${
+          status ? sql` AND ${toolsTable.status} = ${status}` : sql``
+        }`
+      );
+
+    const results = await query;
+
+    return NextResponse.json({ results });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json(
+      { error: 'Failed to fetch tools' },
       { status: 500 }
     );
   }
