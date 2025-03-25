@@ -6,13 +6,14 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { ArrowLeft, Pencil, RefreshCw, Trash2 } from 'lucide-react';
+import { ArrowLeft, Copy, Pencil, RefreshCw, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { use } from 'react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import useSWR from 'swr';
 
+import { getFirstApiKey } from '@/app/actions/api-keys';
 import {
   deleteMcpServerByUuid,
   getMcpServerByUuid,
@@ -47,6 +48,8 @@ import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { McpServerStatus, McpServerType, ToggleStatus } from '@/db/schema';
 import { useProfiles } from '@/hooks/use-profiles';
+import { useProjects } from '@/hooks/use-projects';
+import { useToast } from '@/hooks/use-toast';
 import { McpServer } from '@/types/mcp-server';
 
 export default function McpServerDetailPage({
@@ -55,9 +58,27 @@ export default function McpServerDetailPage({
   params: Promise<{ uuid: string }>;
 }) {
   const { currentProfile } = useProfiles();
+  const { currentProject } = useProjects();
   const { uuid } = use(params);
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
+  const { toast } = useToast();
+
+  const {
+    data: mcpServer,
+    error,
+    mutate,
+  } = useSWR<McpServer | undefined>(
+    uuid && currentProfile?.uuid
+      ? ['getMcpServerByUuid', uuid, currentProfile?.uuid]
+      : null,
+    () => getMcpServerByUuid(currentProfile?.uuid || '', uuid!)
+  );
+
+  const { data: apiKey } = useSWR(
+    currentProject?.uuid ? `${currentProject?.uuid}/api-keys/getFirst` : null,
+    () => getFirstApiKey(currentProject?.uuid || '')
+  );
 
   const form = useForm({
     defaultValues: {
@@ -70,17 +91,6 @@ export default function McpServerDetailPage({
       type: McpServerType.STDIO,
     },
   });
-
-  const {
-    data: mcpServer,
-    error,
-    mutate,
-  } = useSWR<McpServer | undefined>(
-    uuid && currentProfile?.uuid
-      ? ['getMcpServerByUuid', uuid, currentProfile?.uuid]
-      : null,
-    () => getMcpServerByUuid(currentProfile?.uuid || '', uuid!)
-  );
 
   useEffect(() => {
     if (mcpServer) {
@@ -428,10 +438,77 @@ export default function McpServerDetailPage({
       <div className="mt-8">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-bold">Tools</h2>
-          <Button variant="outline" size="sm">
-            <RefreshCw className="mr-2 h-4 w-4" />
-            Refresh
-          </Button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="outline" size="sm" onClick={() => {
+                // Refresh the tools list
+                const toolsMutate = document.getElementById('tools-list-mutate');
+                if (toolsMutate) {
+                  toolsMutate.click();
+                }
+              }}>
+                <RefreshCw className="mr-2 h-4 w-4" />
+                Refresh
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Refresh Tools</DialogTitle>
+              </DialogHeader>
+              <div className="py-4">
+                <p className="mb-4">
+                  To refresh tools for this MCP server, run the following command:
+                </p>
+                {mcpServer.type === McpServerType.STDIO ? (
+                  <div className="relative">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="absolute top-2 right-2 z-10"
+                      onClick={() => {
+                        const command = `npx -y @metamcp/mcp-server-metamcp@latest --metamcp-api-key=${apiKey?.api_key ?? '<create an api key first>'} --report`;
+                        navigator.clipboard.writeText(command);
+                        toast({
+                          description: "Command copied to clipboard"
+                        });
+                      }}
+                    >
+                      <Copy className="h-4 w-4" />
+                    </Button>
+                    <div className="overflow-x-auto max-w-full">
+                      <pre className="bg-[#f6f8fa] text-[#24292f] p-4 rounded-md whitespace-pre-wrap break-words">
+                        {`npx -y @metamcp/mcp-server-metamcp@latest --metamcp-api-key=${apiKey?.api_key ?? '<create an api key first>'} --report`}
+                      </pre>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="relative">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="absolute top-2 right-2 z-10"
+                      onClick={() => {
+                        navigator.clipboard.writeText(mcpServer.url || '');
+                        toast({
+                          description: "URL copied to clipboard"
+                        });
+                      }}
+                    >
+                      <Copy className="h-4 w-4" />
+                    </Button>
+                    <div className="overflow-x-auto max-w-full">
+                      <pre className="bg-[#f6f8fa] text-[#24292f] p-4 rounded-md whitespace-pre-wrap break-words">
+                        {mcpServer.url || ''}
+                      </pre>
+                    </div>
+                  </div>
+                )}
+                <p className="mt-4 text-sm text-muted-foreground">
+                  After running the command, your tools will be refreshed.
+                </p>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
         <ToolsList mcpServerUuid={mcpServer.uuid} />
       </div>
