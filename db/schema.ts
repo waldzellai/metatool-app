@@ -189,7 +189,7 @@ export const toolsTable = pgTable(
       .defaultNow(),
     mcp_server_uuid: uuid('mcp_server_uuid')
       .notNull()
-      .references(() => mcpServersTable.uuid),
+      .references(() => mcpServersTable.uuid, { onDelete: 'cascade' }),
     status: toggleStatusEnum('status').notNull().default(ToggleStatus.ACTIVE),
   },
   (table) => [

@@ -64,6 +64,13 @@
       "when": 1742750501529,
       "tag": "0008_spooky_karen_page",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1742921385142,
+      "tag": "0009_naive_wrecker",
+      "breakpoints": true
     }
   ]
 }

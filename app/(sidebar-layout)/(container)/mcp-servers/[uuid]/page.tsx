@@ -562,7 +562,7 @@ function ToolsList({ mcpServerUuid }: { mcpServerUuid: string }) {
 
   if (error) return <div>Failed to load tools</div>;
   if (!tools) return <div>Loading tools...</div>;
-  if (tools.length === 0) return <div>No tools found for this MCP server</div>;
+  if (tools.length === 0) return <div>No tools found for this MCP server, you may need to refresh tools for this MCP server manually.</div>;
 
   return (
     <div className="overflow-x-auto">
