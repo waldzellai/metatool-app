@@ -82,6 +82,11 @@ export default function McpServerDetailPage({
     () => getFirstApiKey(currentProject?.uuid || '')
   );
 
+  const { mutate: mutateTools } = useSWR(
+    uuid ? ['getToolsByMcpServerUuid', uuid] : null,
+    () => getToolsByMcpServerUuid(uuid)
+  );
+
   const form = useForm({
     defaultValues: {
       name: '',
@@ -487,7 +492,7 @@ export default function McpServerDetailPage({
             <Button size="sm" onClick={async () => {
               try {
                 await refreshSseTools(mcpServer.uuid);
-                await mutate();
+                await mutateTools();
                 toast({
                   description: "SSE tools refreshed successfully"
                 });
