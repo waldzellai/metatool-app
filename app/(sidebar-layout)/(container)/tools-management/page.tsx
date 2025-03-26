@@ -38,14 +38,14 @@ import { useProjects } from '@/hooks/use-projects';
 import { useToast } from '@/hooks/use-toast';
 
 export default function ToolsManagementPage() {
-    const { currentProfile, mutateProfiles } = useProfiles();
+    const { currentProfile, mutateActiveProfile } = useProfiles();
     const { currentProject } = useProjects();
     const { toast } = useToast();
     const [expandedServers, setExpandedServers] = useState<Set<string>>(new Set());
 
     const hasToolsManagement = currentProfile?.enabled_capabilities?.includes(ProfileCapability.TOOLS_MANAGEMENT);
 
-    const { data: mcpServers } = useSWR(
+    const { data: mcpServers, mutate: mutateMcpServers } = useSWR(
         currentProfile?.uuid ? ['getMcpServers', currentProfile.uuid] : null,
         () => getMcpServers(currentProfile?.uuid || '', McpServerStatus.ACTIVE)
     );
@@ -81,7 +81,10 @@ export default function ToolsManagementPage() {
 
         try {
             await updateProfileCapabilities(currentProfile.uuid, newCapabilities);
-            await mutateProfiles();
+            await Promise.all([
+                mutateActiveProfile(),
+                mutateMcpServers()
+            ]);
             toast({
                 description: checked ? "Tools Management enabled" : "Tools Management disabled"
             });
