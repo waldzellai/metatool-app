@@ -5,11 +5,8 @@ export interface Tool {
   name: string;
   description: string | null;
   toolSchema: {
-    inputSchema: {
-      type: 'object';
-      properties?: Record<string, any>;
-    };
-    [key: string]: any;
+    type: 'object';
+    properties?: Record<string, any>;
   };
   created_at: Date;
   mcp_server_uuid: string;
