@@ -1,4 +1,4 @@
-# MetaMCP (Middleware Management MCP)
+# MetaMCP (Middleware MCP to manage MCPs)
 
 [![](https://dcbadge.limes.pink/api/server/mNsyat7mFX)](https://discord.gg/mNsyat7mFX)
 
