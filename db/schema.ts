@@ -74,7 +74,7 @@ export const profilesTable = pgTable(
     name: text('name').notNull(),
     project_uuid: uuid('project_uuid')
       .notNull()
-      .references(() => projectsTable.uuid),
+      .references(() => projectsTable.uuid, { onDelete: 'cascade' }),
     enabled_capabilities: profileCapabilityEnum('enabled_capabilities')
       .array()
       .notNull()
@@ -92,7 +92,7 @@ export const apiKeysTable = pgTable(
     uuid: uuid('uuid').primaryKey().defaultRandom(),
     project_uuid: uuid('project_uuid')
       .notNull()
-      .references(() => projectsTable.uuid),
+      .references(() => projectsTable.uuid, { onDelete: 'cascade' }),
     api_key: text('api_key').notNull(),
     name: text('name').default('API Key'),
     created_at: timestamp('created_at', { withTimezone: true })
