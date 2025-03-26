@@ -1,4 +1,4 @@
-# MetaMCP (formerly MetaTool)
+# MetaMCP (Middleware Management MCP)
 
 [![](https://dcbadge.limes.pink/api/server/mNsyat7mFX)](https://discord.gg/mNsyat7mFX)
 
