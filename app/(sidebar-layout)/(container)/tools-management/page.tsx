@@ -30,7 +30,7 @@ import {
     DialogTrigger,
 } from '@/components/ui/dialog';
 import { Switch } from '@/components/ui/switch';
-import { ToggleStatus } from '@/db/schema';
+import { McpServerStatus, ToggleStatus } from '@/db/schema';
 import { useProfiles } from '@/hooks/use-profiles';
 import { useProjects } from '@/hooks/use-projects';
 import { useToast } from '@/hooks/use-toast';
@@ -43,7 +43,7 @@ export default function ToolsManagementPage() {
 
     const { data: mcpServers } = useSWR(
         currentProfile?.uuid ? ['getMcpServers', currentProfile.uuid] : null,
-        () => getMcpServers(currentProfile?.uuid || '')
+        () => getMcpServers(currentProfile?.uuid || '', McpServerStatus.ACTIVE)
     );
 
     // Auto-expand all servers when data is loaded
@@ -76,7 +76,7 @@ export default function ToolsManagementPage() {
                 <div>
                     <h1 className="text-3xl font-bold">Tools Management</h1>
                     <p className="text-muted-foreground mt-2">
-                        Manage all tools across your MCP servers
+                        Manage all tools across your active MCP servers
                     </p>
                 </div>
             </div>
