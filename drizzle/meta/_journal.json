@@ -71,6 +71,13 @@
       "when": 1742921385142,
       "tag": "0009_naive_wrecker",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1742975730716,
+      "tag": "0010_open_talkback",
+      "breakpoints": true
     }
   ]
 }

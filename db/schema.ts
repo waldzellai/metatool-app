@@ -30,6 +30,10 @@ export enum McpServerType {
   SSE = 'SSE',
 }
 
+export enum ProfileCapability {
+  TOOLS_MANAGEMENT = 'TOOLS_MANAGEMENT',
+}
+
 export const mcpServerStatusEnum = pgEnum(
   'mcp_server_status',
   enumToPgEnum(McpServerStatus)
@@ -43,6 +47,11 @@ export const toggleStatusEnum = pgEnum(
 export const mcpServerTypeEnum = pgEnum(
   'mcp_server_type',
   enumToPgEnum(McpServerType)
+);
+
+export const profileCapabilityEnum = pgEnum(
+  'profile_capability',
+  enumToPgEnum(ProfileCapability)
 );
 
 export const projectsTable = pgTable('projects', {
@@ -66,6 +75,10 @@ export const profilesTable = pgTable(
     project_uuid: uuid('project_uuid')
       .notNull()
       .references(() => projectsTable.uuid),
+    enabled_capabilities: profileCapabilityEnum('enabled_capabilities')
+      .array()
+      .notNull()
+      .default(sql`'{}'::profile_capability[]`),
     created_at: timestamp('created_at', { withTimezone: true })
       .notNull()
       .defaultNow(),
