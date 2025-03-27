@@ -525,7 +525,7 @@ export default function McpServerDetailPage({
             <Button
               variant="outline"
               className="mt-4 w-fit"
-              onClick={() => router.push('/tools-management')}
+              onClick={() => router.push('/tool-management')}
             >
               Go to Tool Management
             </Button>
