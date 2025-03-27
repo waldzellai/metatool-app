@@ -9,6 +9,17 @@ import { db } from '@/db';
 import { mcpServersTable, McpServerType } from '@/db/schema';
 import { toolsTable } from '@/db/schema';
 
+// Helper function to transform localhost URLs for Docker
+function transformUrlForDocker(url: string): string {
+  if (
+    (process.env.USE_DOCKER_HOST ?? 'true') === 'true' &&
+    url.includes('localhost')
+  ) {
+    return url.replace('localhost', 'host.docker.internal');
+  }
+  return url;
+}
+
 export async function refreshSseTools(mcpServerUuid: string) {
   const mcpServer = await db.query.mcpServersTable.findFirst({
     where: eq(mcpServersTable.uuid, mcpServerUuid),
@@ -26,7 +37,8 @@ export async function refreshSseTools(mcpServerUuid: string) {
     throw new Error('MCP server URL is not set');
   }
 
-  const transport = new SSEClientTransport(new URL(mcpServer.url));
+  const transformedUrl = transformUrlForDocker(mcpServer.url);
+  const transport = new SSEClientTransport(new URL(transformedUrl));
 
   const client = new Client(
     {

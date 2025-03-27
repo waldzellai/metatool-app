@@ -13,6 +13,8 @@ services:
       - NODE_ENV=production
     depends_on:
       - metatool-postgres
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   metatool-postgres:
     container_name: metatool-postgres
