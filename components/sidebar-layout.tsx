@@ -10,6 +10,7 @@ import {
   Settings,
   Terminal,
   Trash2,
+  Wrench,
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -114,6 +115,14 @@ export default function SidebarLayout({
                       <Link href='/mcp-servers'>
                         <Server className='mr-2 h-4 w-4' />
                         <span>MCP Servers</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton asChild>
+                      <Link href='/tools-management'>
+                        <Wrench className='mr-2 h-4 w-4' />
+                        <span>Tools Management</span>
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>

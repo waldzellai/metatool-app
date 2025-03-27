@@ -7,6 +7,7 @@ import {
   pgTable,
   text,
   timestamp,
+  unique,
   uuid,
 } from 'drizzle-orm/pg-core';
 
@@ -19,9 +20,18 @@ export enum McpServerStatus {
   DECLINED = 'DECLINED',
 }
 
+export enum ToggleStatus {
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
+}
+
 export enum McpServerType {
   STDIO = 'STDIO',
   SSE = 'SSE',
+}
+
+export enum ProfileCapability {
+  TOOLS_MANAGEMENT = 'TOOLS_MANAGEMENT',
 }
 
 export const mcpServerStatusEnum = pgEnum(
@@ -29,9 +39,19 @@ export const mcpServerStatusEnum = pgEnum(
   enumToPgEnum(McpServerStatus)
 );
 
+export const toggleStatusEnum = pgEnum(
+  'toggle_status',
+  enumToPgEnum(ToggleStatus)
+);
+
 export const mcpServerTypeEnum = pgEnum(
   'mcp_server_type',
   enumToPgEnum(McpServerType)
+);
+
+export const profileCapabilityEnum = pgEnum(
+  'profile_capability',
+  enumToPgEnum(ProfileCapability)
 );
 
 export const projectsTable = pgTable('projects', {
@@ -54,7 +74,11 @@ export const profilesTable = pgTable(
     name: text('name').notNull(),
     project_uuid: uuid('project_uuid')
       .notNull()
-      .references(() => projectsTable.uuid),
+      .references(() => projectsTable.uuid, { onDelete: 'cascade' }),
+    enabled_capabilities: profileCapabilityEnum('enabled_capabilities')
+      .array()
+      .notNull()
+      .default(sql`'{}'::profile_capability[]`),
     created_at: timestamp('created_at', { withTimezone: true })
       .notNull()
       .defaultNow(),
@@ -68,7 +92,7 @@ export const apiKeysTable = pgTable(
     uuid: uuid('uuid').primaryKey().defaultRandom(),
     project_uuid: uuid('project_uuid')
       .notNull()
-      .references(() => projectsTable.uuid),
+      .references(() => projectsTable.uuid, { onDelete: 'cascade' }),
     api_key: text('api_key').notNull(),
     name: text('name').default('API Key'),
     created_at: timestamp('created_at', { withTimezone: true })
@@ -155,5 +179,34 @@ export const customMcpServersTable = pgTable(
   (table) => [
     index('custom_mcp_servers_status_idx').on(table.status),
     index('custom_mcp_servers_profile_uuid_idx').on(table.profile_uuid),
+  ]
+);
+
+export const toolsTable = pgTable(
+  'tools',
+  {
+    uuid: uuid('uuid').primaryKey().defaultRandom(),
+    name: text('name').notNull(),
+    description: text('description'),
+    toolSchema: jsonb('tool_schema')
+      .$type<{
+        type: 'object';
+        properties?: Record<string, any>;
+      }>()
+      .notNull(),
+    created_at: timestamp('created_at', { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    mcp_server_uuid: uuid('mcp_server_uuid')
+      .notNull()
+      .references(() => mcpServersTable.uuid, { onDelete: 'cascade' }),
+    status: toggleStatusEnum('status').notNull().default(ToggleStatus.ACTIVE),
+  },
+  (table) => [
+    index('tools_mcp_server_uuid_idx').on(table.mcp_server_uuid),
+    unique('tools_unique_tool_name_per_server_idx').on(
+      table.mcp_server_uuid,
+      table.name
+    ),
   ]
 );

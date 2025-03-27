@@ -6,17 +6,22 @@ import { db } from '@/db';
 import { mcpServersTable, McpServerStatus, McpServerType } from '@/db/schema';
 import { McpServer } from '@/types/mcp-server';
 
-export async function getMcpServers(profileUuid: string) {
+export async function getMcpServers(
+  profileUuid: string,
+  status?: McpServerStatus
+) {
   const servers = await db
     .select()
     .from(mcpServersTable)
     .where(
       and(
         eq(mcpServersTable.profile_uuid, profileUuid),
-        or(
-          eq(mcpServersTable.status, McpServerStatus.ACTIVE),
-          eq(mcpServersTable.status, McpServerStatus.INACTIVE)
-        )
+        status
+          ? eq(mcpServersTable.status, status)
+          : or(
+              eq(mcpServersTable.status, McpServerStatus.ACTIVE),
+              eq(mcpServersTable.status, McpServerStatus.INACTIVE)
+            )
       )
     )
     .orderBy(desc(mcpServersTable.created_at));
