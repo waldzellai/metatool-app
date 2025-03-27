@@ -3,7 +3,7 @@
 import { eq } from 'drizzle-orm';
 
 import { db } from '@/db';
-import { profilesTable } from '@/db/schema';
+import { ProfileCapability, profilesTable } from '@/db/schema';
 import { projectsTable } from '@/db/schema';
 
 export async function createProfile(currentProjectUuid: string, name: string) {
@@ -181,4 +181,27 @@ export async function setActiveProfile(profileUuid: string) {
   }
 
   return profile[0];
+}
+
+export async function updateProfileCapabilities(
+  profileUuid: string,
+  capabilities: ProfileCapability[]
+) {
+  const profile = await db
+    .select()
+    .from(profilesTable)
+    .where(eq(profilesTable.uuid, profileUuid))
+    .limit(1);
+
+  if (profile.length === 0) {
+    throw new Error('Profile not found');
+  }
+
+  const updatedProfile = await db
+    .update(profilesTable)
+    .set({ enabled_capabilities: capabilities })
+    .where(eq(profilesTable.uuid, profileUuid))
+    .returning();
+
+  return updatedProfile[0];
 }
