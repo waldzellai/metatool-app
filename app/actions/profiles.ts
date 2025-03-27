@@ -3,7 +3,7 @@
 import { eq } from 'drizzle-orm';
 
 import { db } from '@/db';
-import { profilesTable } from '@/db/schema';
+import { ProfileCapability, profilesTable } from '@/db/schema';
 import { projectsTable } from '@/db/schema';
 
 export async function createProfile(currentProjectUuid: string, name: string) {
