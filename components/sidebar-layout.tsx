@@ -120,9 +120,9 @@ export default function SidebarLayout({
                   </SidebarMenuItem>
                   <SidebarMenuItem>
                     <SidebarMenuButton asChild>
-                      <Link href='/tools-management'>
+                      <Link href='/tool-management'>
                         <Wrench className='mr-2 h-4 w-4' />
-                        <span>Tools Management</span>
+                        <span>Tool Management</span>
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>

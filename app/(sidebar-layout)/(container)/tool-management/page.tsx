@@ -86,7 +86,7 @@ export default function ToolsManagementPage() {
                 mutateMcpServers()
             ]);
             toast({
-                description: checked ? "Tools Management enabled" : "Tools Management disabled"
+                description: checked ? "Tool Management enabled" : "Tool Management disabled"
             });
         } catch (error) {
             toast({
@@ -103,19 +103,19 @@ export default function ToolsManagementPage() {
         <div className="container mx-auto px-4 py-8">
             <div className="flex justify-between items-center mb-8">
                 <div>
-                    <h1 className="text-3xl font-bold">Tools Management</h1>
+                    <h1 className="text-3xl font-bold">Tool Management</h1>
                     <p className="text-muted-foreground mt-2">
                         Manage all tools across your active MCP servers
                     </p>
                 </div>
                 <div className="flex items-center space-x-2">
                     <Switch
-                        id="tools-management"
+                        id="tool-management"
                         checked={hasToolsManagement}
                         onCheckedChange={handleToggleToolsManagement}
                     />
-                    <Label htmlFor="tools-management">
-                        Enable Tools Management
+                    <Label htmlFor="tool-management">
+                        Enable Tool Management
                     </Label>
                 </div>
             </div>
@@ -124,7 +124,7 @@ export default function ToolsManagementPage() {
                 <Card>
                     <CardContent className="pt-6">
                         <p className="text-muted-foreground">
-                            Tools Management is currently disabled. Enable it to manage your tools.
+                            Tool Management is currently disabled. Enable it to manage your tools.
                         </p>
                     </CardContent>
                 </Card>

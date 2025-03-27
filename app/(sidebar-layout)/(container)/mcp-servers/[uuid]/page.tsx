@@ -518,16 +518,16 @@ export default function McpServerDetailPage({
       ) : (
         <Card className="mt-8">
           <CardHeader>
-            <CardTitle>Tools Management</CardTitle>
+            <CardTitle>Tool Management</CardTitle>
             <CardDescription>
-              Tools management is currently disabled. To enable this feature and manage tools for your MCP servers, please visit the Tools Management tab in your profile settings.
+              Tool management is currently disabled. To enable this feature and manage tools for your MCP servers, please visit the Tool Management tab in your profile settings.
             </CardDescription>
             <Button
               variant="outline"
               className="mt-4 w-fit"
               onClick={() => router.push('/tools-management')}
             >
-              Go to Tools Management
+              Go to Tool Management
             </Button>
           </CardHeader>
         </Card>
