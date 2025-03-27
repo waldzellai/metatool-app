@@ -470,7 +470,7 @@ export default function McpServerDetailPage({
                         variant="outline"
                         className="absolute top-2 right-2 z-10"
                         onClick={() => {
-                          const command = `npx -y @metamcp/mcp-server-metamcp@latest --metamcp-api-key=${apiKey?.api_key ?? '<create an api key first>'} --report`;
+                          const command = `npx -y @metamcp/mcp-server-metamcp@latest --metamcp-api-key=${apiKey?.api_key ?? '<create an api key first>'} --metamcp-api-base-url http://localhost:12005 --report`;
                           navigator.clipboard.writeText(command);
                           toast({
                             description: "Command copied to clipboard"
@@ -481,7 +481,7 @@ export default function McpServerDetailPage({
                       </Button>
                       <div className="overflow-x-auto max-w-full">
                         <pre className="bg-[#f6f8fa] text-[#24292f] p-4 rounded-md whitespace-pre-wrap break-words">
-                          {`npx -y @metamcp/mcp-server-metamcp@latest --metamcp-api-key=${apiKey?.api_key ?? '<create an api key first>'} --report`}
+                          {`npx -y @metamcp/mcp-server-metamcp@latest --metamcp-api-key=${apiKey?.api_key ?? '<create an api key first>'} --metamcp-api-base-url http://localhost:12005 --report`}
                         </pre>
                       </div>
                     </div>
