@@ -25,7 +25,11 @@ Check out demo videos at https://metamcp.com/. Here is an overview screenshot.
 
 ![MetaMCP Overview Screenshot](screenshot.png)
 
-⚠️ Warning: there are some known compatibility issues on Windows depending on the MCP client implementation, refer to https://github.com/metatool-ai/metatool-app/issues/15 for discussion or workaround solutions.
+## Verified Platform
+
+- [x] Windows (after MCP official typescript SDK 1.8.0, which we updated accordingly, it works) https://github.com/metatool-ai/metatool-app/issues/15
+- [x] Mac
+- [x] Linux
 
 ## Architecture Overview
 
