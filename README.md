@@ -24,6 +24,7 @@ The app is also self hostable, free and open source. The differences between thi
 Check out demo videos at https://metamcp.com/. Here is an overview screenshot.
 
 ![MetaMCP Overview Screenshot](screenshot.png)
+![MetaMCP Tool Management Screenshot](tool_management.png)
 
 ## Verified Platform
 
