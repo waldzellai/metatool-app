@@ -69,8 +69,6 @@ export default function SetupGuidePage() {
             </p>
           </div>
 
-
-
           <div className='p-4 bg-gray-50 rounded-lg'>
             <h3 className='font-medium mb-2'>Manual Configuration</h3>
             <p className='mb-2'>
@@ -198,6 +196,212 @@ export default function SetupGuidePage() {
           </Highlight>
         </div>
       </div></section>
+
+      <section className='mb-8'>
+        <h2 className='text-2xl font-semibold mb-4'>Windows Configuration</h2>
+        <div className='p-4 bg-gray-50 rounded-lg'>
+          <p className='mb-4'>
+            For Windows, you can use the following configuration options:
+          </p>
+
+          <p className='mb-4'>
+            You can use the following command for Cursor:
+          </p>
+
+          <div className='relative mb-6'>
+            <button
+              onClick={() => {
+                const command = `cmd /c npx -y @metamcp/mcp-server-metamcp@latest --metamcp-api-key ${apiKey?.api_key ?? '<create an api key first>'} --metamcp-api-base-url http://localhost:12005`;
+                navigator.clipboard.writeText(command);
+                toast({
+                  description: 'Windows command copied to clipboard',
+                });
+              }}
+              className='absolute top-2 right-2 p-2 text-gray-400 hover:text-white rounded-md hover:bg-gray-700 transition-colors'
+              title='Copy to clipboard'>
+              <Copy className='w-5 h-5' />
+            </button>
+            <Highlight
+              theme={themes.github}
+              code={`cmd /c npx -y @metamcp/mcp-server-metamcp@latest --metamcp-api-key ${apiKey?.api_key ?? '<create an api key first>'} --metamcp-api-base-url http://localhost:12005`}
+              language='bash'>
+              {({ tokens, getLineProps, getTokenProps }) => (
+                <pre className='bg-[#f6f8fa] text-[#24292f] p-4 rounded-md overflow-x-auto'>
+                  {tokens.map((line, i) => (
+                    <div key={i} {...getLineProps({ line })}>
+                      {line.map((token, key) => (
+                        <span key={key} {...getTokenProps({ token })} />
+                      ))}
+                    </div>
+                  ))}
+                </pre>
+              )}
+            </Highlight>
+          </div>
+
+          <p className='mb-4'>
+            Or configure it using json:
+          </p>
+
+          <div className='relative'>
+            <button
+              onClick={() => {
+                const jsonConfig = JSON.stringify(
+                  {
+                    mcpServers: {
+                      MetaMCP: {
+                        command: "cmd",
+                        args: [
+                          "/c",
+                          "npx",
+                          "-y",
+                          "@metamcp/mcp-server-metamcp@latest"
+                        ],
+                        env: {
+                          METAMCP_API_KEY: apiKey?.api_key ?? '<create an api key first>',
+                          METAMCP_API_BASE_URL: "http://localhost:12005"
+                        }
+                      }
+                    }
+                  },
+                  null,
+                  2
+                );
+                navigator.clipboard.writeText(jsonConfig);
+                toast({
+                  description: 'Windows configuration copied to clipboard',
+                });
+              }}
+              className='absolute top-2 right-2 p-2 text-gray-400 hover:text-white rounded-md hover:bg-gray-700 transition-colors'
+              title='Copy to clipboard'>
+              <Copy className='w-5 h-5' />
+            </button>
+            <Highlight
+              theme={themes.github}
+              code={`{
+  "mcpServers": {
+    "MetaMCP": {
+      "command": "cmd",
+      "args": [
+        "/c",
+        "npx",
+        "-y",
+        "@metamcp/mcp-server-metamcp@latest"
+      ],
+      "env": {
+        "METAMCP_API_KEY": "${apiKey?.api_key ?? '<create an api key first>'}",
+        "METAMCP_API_BASE_URL": "http://localhost:12005"
+      }
+    }
+  }
+}`}
+              language='json'>
+              {({ tokens, getLineProps, getTokenProps }) => (
+                <pre className='bg-[#f6f8fa] text-[#24292f] p-4 rounded-md overflow-x-auto'>
+                  {tokens.map((line, i) => (
+                    <div key={i} {...getLineProps({ line })}>
+                      {line.map((token, key) => (
+                        <span key={key} {...getTokenProps({ token })} />
+                      ))}
+                    </div>
+                  ))}
+                </pre>
+              )}
+            </Highlight>
+          </div>
+        </div>
+      </section>
+
+      <section className='mb-8'>
+        <h2 className='text-2xl font-semibold mb-4'>Standalone SSE Server</h2>
+        <div className='p-4 bg-gray-50 rounded-lg'>
+          <p className='mb-4'>
+            You can also use the following command to start a standalone SSE server:
+          </p>
+
+          <div className='relative mb-6'>
+            <button
+              onClick={() => {
+                const command = `mcp-server-metamcp --metamcp-api-key ${apiKey?.api_key ?? '<create an api key first>'} --transport sse --port 12006`;
+                navigator.clipboard.writeText(command);
+                toast({
+                  description: 'Standalone SSE command copied to clipboard',
+                });
+              }}
+              className='absolute top-2 right-2 p-2 text-gray-400 hover:text-white rounded-md hover:bg-gray-700 transition-colors'
+              title='Copy to clipboard'>
+              <Copy className='w-5 h-5' />
+            </button>
+            <Highlight
+              theme={themes.github}
+              code={`mcp-server-metamcp --metamcp-api-key ${apiKey?.api_key ?? '<create an api key first>'} --transport sse --port 12006`}
+              language='bash'>
+              {({ tokens, getLineProps, getTokenProps }) => (
+                <pre className='bg-[#f6f8fa] text-[#24292f] p-4 rounded-md overflow-x-auto'>
+                  {tokens.map((line, i) => (
+                    <div key={i} {...getLineProps({ line })}>
+                      {line.map((token, key) => (
+                        <span key={key} {...getTokenProps({ token })} />
+                      ))}
+                    </div>
+                  ))}
+                </pre>
+              )}
+            </Highlight>
+          </div>
+
+          <p className='mb-4'>
+            Then use following json configuration:
+          </p>
+
+          <div className='relative'>
+            <button
+              onClick={() => {
+                const jsonConfig = JSON.stringify(
+                  {
+                    mcpServers: {
+                      MetaMCP: {
+                        url: "http://localhost:12006",
+                      }
+                    }
+                  },
+                  null,
+                  2
+                );
+                navigator.clipboard.writeText(jsonConfig);
+                toast({
+                  description: 'SSE JSON configuration copied to clipboard',
+                });
+              }}
+              className='absolute top-2 right-2 p-2 text-gray-400 hover:text-white rounded-md hover:bg-gray-700 transition-colors'
+              title='Copy to clipboard'>
+              <Copy className='w-5 h-5' />
+            </button>
+            <Highlight
+              theme={themes.github}
+              code={`{
+  "mcpServers": {
+    "MetaMCP": {
+      "url": "http://localhost:12006"
+    }
+  }
+}`}
+              language='json'>
+              {({ tokens, getLineProps, getTokenProps }) => (
+                <pre className='bg-[#f6f8fa] text-[#24292f] p-4 rounded-md overflow-x-auto'>
+                  {tokens.map((line, i) => (
+                    <div key={i} {...getLineProps({ line })}>
+                      {line.map((token, key) => (
+                        <span key={key} {...getTokenProps({ token })} />
+                      ))}
+                    </div>
+                  ))}
+                </pre>
+              )}
+            </Highlight>
+          </div>
+        </div>
+      </section>
 
       <section className='mb-8'>
         <h2 className='text-2xl font-semibold mb-4'>Smithery Windows Configuration</h2>
