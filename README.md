@@ -8,7 +8,7 @@ MetaMCP is "the One" middleware MCP to manage all your MCPs. It uses a GUI fulls
 
 A few feature highlights:
 
-- GUI app to manage configurations with dynamic updates when `list_tools`, etc.
+- GUI app to manage multiple MCP server integrations all together.
 - Support ANY MCP clients (e.g., Claude Desktop, Cursor, etc.) because MetaMCP is a MCP server.
 - Support prompts, resources, tools under MCP.
 - Support multi-workspace: e.g., activate a workspace of DB1 or switch to DB2 in another workspace, preventing polluting context of DB1 to your MCP Client.
