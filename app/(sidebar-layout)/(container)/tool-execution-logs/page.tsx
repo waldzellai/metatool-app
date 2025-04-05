@@ -45,6 +45,7 @@ import { Switch } from '@/components/ui/switch';
 import { ProfileCapability, ToolExecutionStatus } from '@/db/schema';
 import { useProfiles } from '@/hooks/use-profiles';
 import { useToast } from '@/hooks/use-toast';
+import { cn } from '@/lib/utils';
 
 export default function ToolExecutionLogsPage() {
     const { currentProfile, mutateActiveProfile } = useProfiles();
@@ -523,7 +524,10 @@ export default function ToolExecutionLogsPage() {
                                                 <PaginationItem>
                                                     <PaginationPrevious
                                                         onClick={() => setPage(Math.max(0, page - 1))}
-                                                        className={page === 0 ? "cursor-not-allowed opacity-50" : ""}
+                                                        className={cn(
+                                                            "cursor-pointer",
+                                                            page === 0 ? "cursor-not-allowed opacity-50" : ""
+                                                        )}
                                                     />
                                                 </PaginationItem>
 
@@ -546,6 +550,7 @@ export default function ToolExecutionLogsPage() {
                                                                 <PaginationLink
                                                                     isActive={pageIndex === page}
                                                                     onClick={() => setPage(pageIndex)}
+                                                                    className="cursor-pointer"
                                                                 >
                                                                     {pageIndex + 1}
                                                                 </PaginationLink>
@@ -564,7 +569,10 @@ export default function ToolExecutionLogsPage() {
                                                 <PaginationItem>
                                                     <PaginationNext
                                                         onClick={() => setPage(Math.min(table.getPageCount() - 1, page + 1))}
-                                                        className={page >= table.getPageCount() - 1 ? "cursor-not-allowed opacity-50" : ""}
+                                                        className={cn(
+                                                            "cursor-pointer",
+                                                            page >= table.getPageCount() - 1 ? "cursor-not-allowed opacity-50" : ""
+                                                        )}
                                                     />
                                                 </PaginationItem>
                                             </PaginationContent>
