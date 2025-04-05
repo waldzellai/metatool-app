@@ -109,7 +109,7 @@ export async function getToolExecutionLogs({
       eq(toolExecutionLogsTable.mcp_server_uuid, mcpServersTable.uuid)
     )
     .where(whereClause)
-    .orderBy(desc(toolExecutionLogsTable.created_at))
+    .orderBy(desc(toolExecutionLogsTable.id))
     .limit(limit)
     .offset(offset);
 
