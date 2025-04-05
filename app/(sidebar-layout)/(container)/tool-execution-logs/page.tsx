@@ -9,7 +9,7 @@ import {
 } from '@tanstack/react-table';
 import { Check, Clock, Filter, RefreshCw, XCircle } from 'lucide-react';
 import { Highlight, themes } from 'prism-react-renderer';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 
 import { getMcpServers } from '@/app/actions/mcp-servers';
@@ -61,15 +61,26 @@ export default function ToolExecutionLogsPage() {
         statuses: [],
     });
     const [showFilters, setShowFilters] = useState(false);
+    const [hasToolLogsEnabled, setHasToolLogsEnabled] = useState(false);
 
     // Pagination options
     const pageSizeOptions = [10, 20, 30, 50];
     const [selectedPageSize, setSelectedPageSize] = useState(10);
 
-    const { data: logsData, mutate: mutateLogs, isLoading } = useSWR(
-        currentProfile?.uuid ? ['getToolExecutionLogs', page, pageSize, JSON.stringify(filters), currentProfile?.uuid] : null,
-        () => getToolExecutionLogs({
+    // Update local state when profile changes
+    useEffect(() => {
+        if (currentProfile) {
+            setHasToolLogsEnabled(
+                currentProfile.enabled_capabilities?.includes(ProfileCapability.TOOL_LOGS) || false
+            );
+        }
+    }, [currentProfile]);
 
+    const { data: logsData, mutate: mutateLogs, isLoading } = useSWR(
+        currentProfile?.uuid && hasToolLogsEnabled
+            ? ['getToolExecutionLogs', page, pageSize, JSON.stringify(filters), currentProfile.uuid, hasToolLogsEnabled]
+            : null,
+        () => getToolExecutionLogs({
             currentProfileUuid: currentProfile?.uuid || '',
             limit: pageSize,
             offset: page * pageSize,
@@ -86,8 +97,6 @@ export default function ToolExecutionLogsPage() {
         'getToolNames',
         () => getToolNames(currentProfile?.uuid || '')
     );
-
-    const hasToolLogs = currentProfile?.enabled_capabilities?.includes(ProfileCapability.TOOL_LOGS);
 
     const handlePageSizeChange = (newSize: number) => {
         setSelectedPageSize(newSize);
@@ -246,11 +255,17 @@ export default function ToolExecutionLogsPage() {
 
         try {
             await updateProfileCapabilities(currentProfile.uuid, newCapabilities);
+            // Update the UI immediately for responsiveness
+            setHasToolLogsEnabled(checked);
+            // Refresh all data
             await mutateActiveProfile();
+            await mutateLogs();
             toast({
                 description: checked ? "Tool Logs enabled" : "Tool Logs disabled"
             });
         } catch (error) {
+            // Revert UI state on error
+            setHasToolLogsEnabled(!checked);
             toast({
                 variant: "destructive",
                 title: "Error updating capabilities",
@@ -272,14 +287,14 @@ export default function ToolExecutionLogsPage() {
                     <div className="flex items-center space-x-2">
                         <Switch
                             id="tool-logs"
-                            checked={hasToolLogs}
+                            checked={hasToolLogsEnabled}
                             onCheckedChange={handleToggleToolLogs}
                         />
                         <Label htmlFor="tool-logs">
                             Enable Tool Logs
                         </Label>
                     </div>
-                    {hasToolLogs && (
+                    {hasToolLogsEnabled && (
                         <>
                             <Button
                                 variant="outline"
@@ -302,7 +317,7 @@ export default function ToolExecutionLogsPage() {
                 </div>
             </div>
 
-            {!hasToolLogs ? (
+            {!hasToolLogsEnabled ? (
                 <Card>
                     <CardContent className="pt-6">
                         <p className="text-muted-foreground">
