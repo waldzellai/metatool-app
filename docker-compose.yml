@@ -28,6 +28,11 @@ services:
       - '8432:5432'
     volumes:
       - metatool-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U metatool" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   drizzle-migrate:
     container_name: drizzle-migrate
@@ -39,7 +44,8 @@ services:
     env_file:
       - .env
     depends_on:
-      - metatool-postgres
+      metatool-postgres:
+        condition: service_healthy
 
 volumes:
   metatool-postgres:
