@@ -2,6 +2,7 @@
 
 import {
   Code2,
+  FileText,
   Info,
   Key,
   Plus,
@@ -123,6 +124,14 @@ export default function SidebarLayout({
                       <Link href='/tool-management'>
                         <Wrench className='mr-2 h-4 w-4' />
                         <span>Tool Management</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton asChild>
+                      <Link href='/tool-execution-logs'>
+                        <FileText className='mr-2 h-4 w-4' />
+                        <span>Tool Execution Logs</span>
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
