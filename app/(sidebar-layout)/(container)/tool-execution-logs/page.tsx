@@ -10,7 +10,7 @@ import {
 import { Check, Clock, Filter, RefreshCw, XCircle } from 'lucide-react';
 import { Highlight, themes } from 'prism-react-renderer';
 import { useEffect, useState } from 'react';
-import useSWR from 'swr';
+import useSWR, { mutate } from 'swr';
 
 import { getMcpServers } from '@/app/actions/mcp-servers';
 import { updateProfileCapabilities } from '@/app/actions/profiles';
@@ -90,12 +90,16 @@ export default function ToolExecutionLogsPage() {
     );
 
     const { data: mcpServers } = useSWR(
-        'getMcpServers',
+        currentProfile?.uuid && hasToolLogsEnabled
+            ? ['getMcpServers', currentProfile.uuid]
+            : null,
         () => getMcpServers(currentProfile?.uuid || '')
     );
 
     const { data: toolNames } = useSWR(
-        'getToolNames',
+        currentProfile?.uuid && hasToolLogsEnabled
+            ? ['getToolNames', currentProfile.uuid]
+            : null,
         () => getToolNames(currentProfile?.uuid || '')
     );
 
@@ -261,6 +265,8 @@ export default function ToolExecutionLogsPage() {
             // Refresh all data
             await mutateActiveProfile();
             await mutateLogs();
+            await mutate(['getMcpServers', currentProfile?.uuid]);
+            await mutate(['getToolNames', currentProfile?.uuid]);
             toast({
                 description: checked ? "Tool Logs enabled" : "Tool Logs disabled"
             });
@@ -307,7 +313,11 @@ export default function ToolExecutionLogsPage() {
                             </Button>
                             <Button
                                 variant="default"
-                                onClick={() => mutateLogs()}
+                                onClick={() => {
+                                    mutateLogs();
+                                    mutate(['getMcpServers', currentProfile?.uuid]);
+                                    mutate(['getToolNames', currentProfile?.uuid]);
+                                }}
                                 className="flex items-center gap-2"
                             >
                                 <RefreshCw className="h-4 w-4" />
