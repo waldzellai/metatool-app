@@ -27,35 +27,6 @@ Check out demo videos at https://metamcp.com/. Here is an overview screenshot.
 - [x] Mac
 - [x] Linux
 
-## Architecture Overview
-
-Note that prompts and resources are also covered similar to tools.
-
-```mermaid
-sequenceDiagram
-    participant MCPClient as MCP Client (e.g., Claude Desktop)
-    participant MetaMCPMCP as MetaMCP MCP Server
-    participant MetaMCPApp as MetaMCP App
-    participant MCPServers as Installed MCP Servers in MetaMCP App
-
-    MCPClient ->> MetaMCPMCP: Request list tools
-    MetaMCPMCP ->> MetaMCPApp: Get tools configuration & status
-    MetaMCPApp ->> MetaMCPMCP: Return tools configuration & status
-
-    loop For each listed MCP Server
-        MetaMCPMCP ->> MCPServers: Request list_tools
-        MCPServers ->> MetaMCPMCP: Return list of tools
-    end
-
-    MetaMCPMCP ->> MetaMCPMCP: Aggregate tool lists
-    MetaMCPMCP ->> MCPClient: Return aggregated list of tools
-
-    MCPClient ->> MetaMCPMCP: Call tool
-    MetaMCPMCP ->> MCPServers: call_tool to target MCP Server
-    MCPServers ->> MetaMCPMCP: Return tool response
-    MetaMCPMCP ->> MCPClient: Return tool response
-```
-
 ## Installation
 
 To get instantly started with cloud version visit https://metamcp.com/.
@@ -96,7 +67,36 @@ For Cursor, env vars aren't easy to get typed in so you may use args instead
 npx -y @metamcp/mcp-server-metamcp@latest --metamcp-api-key <your-api-key> --metamcp-api-base-url <base-url>
 ```
 
-You can get the API key from the MetaMCP App's API Keys page.
+You can get the API key from the MetaMCP App's API Keys page (self hosted available).
+
+## Architecture Overview
+
+Note that prompts and resources are also covered similar to tools.
+
+```mermaid
+sequenceDiagram
+    participant MCPClient as MCP Client (e.g., Claude Desktop)
+    participant MetaMCPMCP as MetaMCP MCP Server
+    participant MetaMCPApp as MetaMCP App
+    participant MCPServers as Installed MCP Servers in MetaMCP App
+
+    MCPClient ->> MetaMCPMCP: Request list tools
+    MetaMCPMCP ->> MetaMCPApp: Get tools configuration & status
+    MetaMCPApp ->> MetaMCPMCP: Return tools configuration & status
+
+    loop For each listed MCP Server
+        MetaMCPMCP ->> MCPServers: Request list_tools
+        MCPServers ->> MetaMCPMCP: Return list of tools
+    end
+
+    MetaMCPMCP ->> MetaMCPMCP: Aggregate tool lists
+    MetaMCPMCP ->> MCPClient: Return aggregated list of tools
+
+    MCPClient ->> MetaMCPMCP: Call tool
+    MetaMCPMCP ->> MCPServers: call_tool to target MCP Server
+    MCPServers ->> MetaMCPMCP: Return tool response
+    MetaMCPMCP ->> MCPClient: Return tool response
+```
 
 ## License
 
